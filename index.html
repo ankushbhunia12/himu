@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Himu, With Love</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Dancing+Script:wght@500;700&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blush:#f9d9e3;
+    --petal:#f3b6c9;
+    --rose:#c2185b;
+    --deep:#6e1a3d;
+    --cream:#fff6f2;
+    --gold:#d8ab6d;
+    --ink:#4a1030;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Nunito', sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.script{
+    font-family:'Playfair Display', serif;
+  }
+  .script-accent{
+    font-family:'Dancing Script', cursive;
+  }
+
+  /* ambient petals */
+  #petal-canvas{
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    pointer-events:none;
+    z-index:2;
+  }
+  .petal{
+    position:absolute;
+    top:-5%;
+    font-size:1.4rem;
+    opacity:.8;
+    animation:fall linear infinite;
+    color:var(--petal);
+    user-select:none;
+  }
+  @keyframes fall{
+    to{ transform:translateY(110vh) rotate(360deg); }
+  }
+
+  section{
+    min-height:100vh;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:6vh 6vw;
+    text-align:center;
+  }
+
+  /* HERO */
+  #hero{
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,.5), transparent 40%),
+      linear-gradient(160deg, var(--blush), var(--petal) 60%, #eb9db8 100%);
+  }
+  #hero .eyebrow{
+    letter-spacing:.35em;
+    text-transform:uppercase;
+    font-size:.7rem;
+    color:var(--deep);
+    opacity:.75;
+    margin-bottom:1.2rem;
+  }
+  #hero h1{
+    font-size:clamp(2.6rem, 8vw, 5.5rem);
+    color:var(--deep);
+    margin:0;
+    line-height:1.05;
+    font-weight:700;
+  }
+  #hero .sub{
+    margin-top:1.4rem;
+    font-size:1.15rem;
+    max-width:36ch;
+    color:var(--ink);
+    opacity:.85;
+  }
+  .scroll-cue{
+    margin-top:3.5rem;
+    font-size:.85rem;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:var(--deep);
+    opacity:.6;
+    animation:bob 2s ease-in-out infinite;
+  }
+  @keyframes bob{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(8px); }
+  }
+
+  /* APOLOGY / ENVELOPE */
+  #apology{
+    background: linear-gradient(180deg, #eb9db8, #f6c6d4 40%, var(--cream));
+  }
+  #apology h2{
+    color:var(--deep);
+    font-size:clamp(1.8rem,5vw,2.8rem);
+    margin-bottom:.4rem;
+  }
+  #apology .lede{
+    max-width:34ch;
+    margin-bottom:2.6rem;
+    opacity:.85;
+  }
+
+  .envelope-wrap{
+    perspective:1200px;
+    cursor:pointer;
+  }
+  .envelope{
+    width:min(320px, 80vw);
+    height:210px;
+    position:relative;
+    background:var(--rose);
+    border-radius:6px;
+    box-shadow:0 20px 40px -12px rgba(110,26,61,.5);
+  }
+  .envelope::before{ /* top flap */
+    content:"";
+    position:absolute;
+    top:0; left:0;
+    width:0; height:0;
+    border-left:160px solid transparent;
+    border-right:160px solid transparent;
+    border-top:105px solid #a3134f;
+    transition:transform .7s cubic-bezier(.6,-0.1,.3,1.2);
+    transform-origin:top center;
+    z-index:3;
+  }
+  .envelope.open::before{
+    transform:rotateX(180deg);
+  }
+  .seal{
+    position:absolute;
+    top:78px; left:50%;
+    transform:translateX(-50%);
+    width:46px; height:46px;
+    background:var(--gold);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Dancing Script', cursive;
+    font-size:1.3rem;
+    color:#fff;
+    box-shadow:0 4px 10px rgba(0,0,0,.25);
+    z-index:4;
+    transition:opacity .3s ease .2s, transform .3s ease .2s;
+  }
+  .envelope.open .seal{
+    opacity:0;
+    transform:translateX(-50%) scale(0);
+  }
+  .letter{
+    position:absolute;
+    bottom:8px; left:50%;
+    transform:translateX(-50%) translateY(0);
+    width:88%;
+    height:82%;
+    background:var(--cream);
+    border-radius:3px;
+    box-shadow:0 6px 18px rgba(0,0,0,.15);
+    z-index:2;
+    transition:transform .7s cubic-bezier(.2,.9,.3,1.1) .15s;
+  }
+  .envelope.open .letter{
+    transform:translateX(-50%) translateY(-260px);
+  }
+  .hint{
+    margin-top:1.6rem;
+    font-size:.85rem;
+    opacity:.65;
+    letter-spacing:.05em;
+  }
+
+  .letter-content{
+    max-width:520px;
+    background:#fffaf7;
+    border-radius:14px;
+    padding:2.6rem 2.2rem;
+    margin-top:2.5rem;
+    box-shadow:0 20px 45px -20px rgba(110,26,61,.35);
+    display:none;
+    text-align:left;
+    line-height:1.85;
+    font-size:1.02rem;
+  }
+  .letter-content.show{ display:block; animation:riseIn .6s ease; }
+  @keyframes riseIn{
+    from{ opacity:0; transform:translateY(24px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .letter-content p{ margin:0 0 1.1rem; }
+  .letter-content .signoff{
+    font-family:'Dancing Script', cursive;
+    font-size:1.6rem;
+    color:var(--rose);
+    margin-top:1rem;
+  }
+
+  /* BIRTHDAY */
+  #birthday{
+    background: linear-gradient(180deg, var(--cream), #ffe3ec 55%, var(--petal));
+  }
+  #birthday .eyebrow{
+    letter-spacing:.3em;
+    text-transform:uppercase;
+    font-size:.75rem;
+    color:var(--rose);
+    margin-bottom:1rem;
+  }
+  #birthday h2{
+    font-size:clamp(2.2rem,6vw,3.6rem);
+    color:var(--deep);
+    margin:0 0 .6rem;
+  }
+  #birthday .name{
+    color:var(--rose);
+  }
+  .countdown{
+    display:flex;
+    gap:1.4rem;
+    margin:2.4rem 0 2.8rem;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .count-box{
+    background:rgba(255,255,255,.6);
+    backdrop-filter:blur(6px);
+    border:1px solid rgba(194,24,91,.25);
+    border-radius:16px;
+    padding:1.1rem 1.4rem;
+    min-width:84px;
+  }
+  .count-box .num{
+    font-family:'Playfair Display', serif;
+    font-size:2.1rem;
+    color:var(--deep);
+    font-weight:700;
+  }
+  .count-box .label{
+    font-size:.72rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    opacity:.7;
+    margin-top:.2rem;
+  }
+  .balloons{
+    position:relative;
+    width:100%;
+    max-width:600px;
+    height:60px;
+    margin-bottom:1rem;
+  }
+  .wish{
+    max-width:38ch;
+    font-size:1.05rem;
+    opacity:.9;
+  }
+
+  /* NOTES */
+  #notes{
+    background:linear-gradient(180deg, var(--petal), #f6d3e0 60%, var(--cream));
+  }
+  #notes h2{
+    color:var(--deep);
+    margin-bottom:2.4rem;
+    font-size:clamp(1.8rem,5vw,2.6rem);
+  }
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(200px,1fr));
+    gap:1.4rem;
+    max-width:900px;
+    width:100%;
+  }
+  .card{
+    background:#fffaf8;
+    border-radius:16px;
+    padding:1.6rem 1.3rem;
+    box-shadow:0 14px 30px -18px rgba(110,26,61,.4);
+    transform:rotate(var(--r,0deg));
+    transition:transform .25s ease;
+  }
+  .card:nth-child(1){ --r:-2deg; }
+  .card:nth-child(2){ --r:1.5deg; }
+  .card:nth-child(3){ --r:-1deg; }
+  .card:nth-child(4){ --r:2deg; }
+  .card:hover{ transform:rotate(0deg) translateY(-4px); }
+  .card .heart{ color:var(--rose); font-size:1.1rem; margin-bottom:.5rem; }
+  .card p{ font-size:.95rem; line-height:1.6; margin:0; opacity:.9; }
+
+  /* CLOSING */
+  #closing{
+    background:linear-gradient(180deg, var(--cream), var(--blush));
+  }
+  #closing h2{
+    font-size:clamp(1.8rem,5vw,2.8rem);
+    color:var(--deep);
+    margin-bottom:1rem;
+  }
+  #closing .script-accent{
+    font-size:clamp(1.6rem,4vw,2.2rem);
+    color:var(--rose);
+  }
+  .heartbeat{
+    font-size:2.4rem;
+    margin-top:1.6rem;
+    animation:beat 1.4s ease-in-out infinite;
+    color:var(--rose);
+  }
+  @keyframes beat{
+    0%,100%{ transform:scale(1); }
+    25%{ transform:scale(1.15); }
+    40%{ transform:scale(1); }
+  }
+
+  footer{
+    text-align:center;
+    padding:1.6rem;
+    font-size:.75rem;
+    opacity:.5;
+    background:var(--blush);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="petal-canvas"></canvas>
+<div id="petal-layer"></div>
+
+<section id="hero">
+  <div class="eyebrow">a small website, for a very big feeling</div>
+  <h1>For Himu</h1>
+  <p class="sub">Two things I've been carrying — a sorry, and a wish. Scroll down, my love.</p>
+  <div class="scroll-cue">↓ keep going ↓</div>
+</section>
+
+<section id="apology">
+  <h2>Before anything else...</h2>
+  <p class="lede">I'm sorry, Himani. Really. Open this when you're ready.</p>
+  <div class="envelope-wrap" onclick="openEnvelope()">
+    <div class="envelope" id="envelope">
+      <div class="seal">H</div>
+      <div class="letter"></div>
+    </div>
+  </div>
+  <p class="hint" id="envHint">tap the envelope to open it</p>
+
+  <div class="letter-content" id="letterContent">
+    <p>My Himu,</p>
+    <p>I don't want to make excuses, so I won't. I just want to say it plainly: I'm sorry. For the times I was careless with your feelings, for the moments I made you doubt how much you mean to me, and for every time my words or my silence hurt you when you deserved better from me.</p>
+    <p>You've been patient with me in ways I probably haven't earned yet, and that patience is not something I take lightly. I see it. I'm grateful for it. And I'm genuinely trying to be someone who gives you the same softness you give me.</p>
+    <p>You don't have to say anything back right now. I just needed you to know that I know — and that I'm choosing, on purpose, to do better.</p>
+    <p class="signoff">I love you. All of you. Even the mad-at-me version. 🤍</p>
+  </div>
+</section>
+
+<section id="birthday">
+  <div class="eyebrow">Coming up on July 11</div>
+  <h2>Happy (almost) Birthday,<br><span class="name">Himani</span> 🎂</h2>
+  <p class="wish">Before the day even gets here, I wanted you to already feel celebrated. Consider this the opening gift.</p>
+
+  <div class="countdown" id="countdown">
+    <div class="count-box"><div class="num" id="cd-days">--</div><div class="label">Days</div></div>
+    <div class="count-box"><div class="num" id="cd-hours">--</div><div class="label">Hours</div></div>
+    <div class="count-box"><div class="num" id="cd-mins">--</div><div class="label">Mins</div></div>
+    <div class="count-box"><div class="num" id="cd-secs">--</div><div class="label">Secs</div></div>
+  </div>
+
+  <p class="wish">I hope this year hands you everything you quietly wish for and never say out loud — I hope it's kinder to you than the last, softer on your heart, and full of the small ordinary joys you love most. And I hope you know, every single day of it, that you're loved. Deeply. By me.</p>
+</section>
+
+<section id="notes">
+  <h2>A few things I love about you, Himu</h2>
+  <div class="cards">
+    <div class="card"><div class="heart">♥</div><p>The way you laugh at your own jokes before you even finish telling them.</p></div>
+    <div class="card"><div class="heart">♥</div><p>How fiercely you care about the people you love — including me, even when I don't deserve it.</p></div>
+    <div class="card"><div class="heart">♥</div><p>That you're honest with me, even when it's easier not to be.</p></div>
+    <div class="card"><div class="heart">♥</div><p>You make ordinary days feel like they matter. I don't say that enough.</p></div>
+  </div>
+</section>
+
+<section id="closing">
+  <h2>So, happy birthday, Himu.</h2>
+  <div class="script-accent">and thank you for still being here with me.</div>
+  <div class="heartbeat">♥</div>
+</section>
+
+<footer>made with a very sorry, very grateful heart — for Himani Sharma</footer>
+
+<script>
+  // Envelope open
+  function openEnvelope(){
+    const env = document.getElementById('envelope');
+    const content = document.getElementById('letterContent');
+    const hint = document.getElementById('envHint');
+    env.classList.toggle('open');
+    if(env.classList.contains('open')){
+      setTimeout(()=> content.classList.add('show'), 500);
+      hint.style.opacity = 0;
+    } else {
+      content.classList.remove('show');
+      hint.style.opacity = .65;
+    }
+  }
+
+  // Countdown to July 11 (next occurrence)
+  function updateCountdown(){
+    const now = new Date();
+    let year = now.getFullYear();
+    let target = new Date(year, 6, 11, 0,0,0); // month index 6 = July
+    if(target < now){
+      target = new Date(year+1, 6, 11, 0,0,0);
+    }
+    const diff = target - now;
+    const d = Math.floor(diff/(1000*60*60*24));
+    const h = Math.floor((diff/(1000*60*60))%24);
+    const m = Math.floor((diff/(1000*60))%60);
+    const s = Math.floor((diff/1000)%60);
+    document.getElementById('cd-days').textContent = d;
+    document.getElementById('cd-hours').textContent = h;
+    document.getElementById('cd-mins').textContent = m;
+    document.getElementById('cd-secs').textContent = s;
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // Floating petals ambient effect (simple DOM based, respects reduced motion)
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!prefersReduced){
+    const layer = document.getElementById('petal-layer');
+    layer.style.position='fixed';
+    layer.style.top=0; layer.style.left=0;
+    layer.style.width='100%'; layer.style.height='100%';
+    layer.style.pointerEvents='none';
+    layer.style.overflow='hidden';
+    layer.style.zIndex=1;
+    const symbols = ['❀','✿','♥','❁'];
+    for(let i=0;i<14;i++){
+      const p = document.createElement('div');
+      p.className='petal';
+      p.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+      p.style.left = Math.random()*100 + '%';
+      p.style.animationDuration = (10 + Math.random()*12) + 's';
+      p.style.animationDelay = (Math.random()*10) + 's';
+      p.style.fontSize = (0.9 + Math.random()*1.2) + 'rem';
+      layer.appendChild(p);
+    }
+  }
+</script>
+
+</body>
+</html>
+
+ 
